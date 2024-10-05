@@ -1,4 +1,4 @@
 # c-queue
-A basic implementaion of an array-based queue in C.
+A basic implementaion of a (circular) array-based queue in C.
 
-(resize currenlty not implemented, will do soon)
+(note: the queue_resize function currently changes the positions of the elements, so be careful with reusing head and tail variables)

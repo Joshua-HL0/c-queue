@@ -1,4 +1,5 @@
 #include "queue.h"
+#include <string.h>
 
 void queue_init(Queue *queue, int elementSize, int capacity){
     queue->elementSize = elementSize;
@@ -46,7 +47,34 @@ int queue_is_empty(Queue *queue){
 }
 
 void queue_resize(Queue *queue, int additional){
-    ; // will implement soon! obviously more complicated because the queue is circular and just using realloc would case a gap in the queue (probably will use realloc then memcpy)
+   // currently instead of using realloc this just copies the data to a new array and sets the head back to 0, which potentially 
+   // could cause some problems if you don't look at the source code and are lazy with pointers but it will do for now
+
+    int total = queue->capacity + additional;
+    void *tmp = malloc(total * queue->elementSize);
+
+    if (!tmp){
+        return;
+    }
+
+    if (queue->head < queue->tail){
+        memcpy(tmp, (char*)queue->data + queue->head * queue->elementSize, queue->elementSize * queue->elementSize);
+
+    }
+    else{
+        int arrayEndSize = queue->capacity - queue->head;
+        memcpy(tmp, (char*)queue->data + queue->head * queue->elementSize, arrayEndSize * queue->elementSize);
+
+        int wrapAroundSize = queue->tail + 1;
+        memcpy((char*)tmp + arrayEndSize * queue->elementSize, queue->data, wrapAroundSize * queue->elementSize);
+    }
+
+    queue->head = 0;
+    queue->tail = queue->size - 1;
+    queue->capacity = total;
+
+    free(queue->data);
+    queue->data = tmp;
 }
 
 void queue_free(Queue *queue){

@@ -10,6 +10,8 @@ int main(){
     x = 56;
     queue_enqueue(&q, &x);
 
+    queue_resize(&q, 20);
+
     int y;
     queue_dequeue(&q, &y);
     printf("Dequeue: %d\n", y);
